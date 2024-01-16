@@ -1,11 +1,12 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="Main" this:Main.messageId="AAMkADE2NWE2Zjg5LWVjOWQtNGNiNi05ZjViLTc3ZDQ5ZWM2ZGZkZABGAAAAAABnvBYhk82XQqxKRJ3hcwF5BwCOtrCWHMXeTYvi1wg-JUVUAAAAAAEMAACOtrCWHMXeTYvi1wg-JUVUAAABBOInAAA=" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data.Common" xmlns:this="clr-namespace:" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="messageId" Type="InArgument(x:String)" />
+    <x:Property Name="assessmentId" Type="InArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>691,716</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>691,815</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -100,13 +101,13 @@
       <AssemblyReference>System.Linq.Async</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="512,651" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="450,750" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="scg:IList(sd:DataTable)" Name="DU_Data" />
-      <Variable x:TypeArguments="sd:DataTable" Name="CM_Data" />
       <Variable x:TypeArguments="x:String" Name="DownstreamOutcome" />
       <Variable x:TypeArguments="sd:DataTable" Name="DtCustomerData" />
       <Variable x:TypeArguments="sd:DataTable" Name="DtLandTaxAssessments" />
+      <Variable x:TypeArguments="x:String" Name="emailTemplate" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -114,28 +115,51 @@
         <x:Boolean x:Key="IsPinned">False</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence DisplayName="Read Mock Data" sap:VirtualizedContainerService.HintSize="450,81" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtCustomerData]" DisplayName="Read Range Workbook - CustomerData" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_3" PreserveFormat="True" SheetName="CustomerData" WorkbookPath="MockData\Mock Data.xlsx" />
+    <ui:CommentOut DisplayName="Comment Out" sap:VirtualizedContainerService.HintSize="388,52" sap2010:WorkflowViewState.IdRef="CommentOut_2">
+      <ui:CommentOut.Body>
+        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="512,192" sap2010:WorkflowViewState.IdRef="Sequence_4">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Sequence DisplayName="Read Mock Data" sap:VirtualizedContainerService.HintSize="450,81" sap2010:WorkflowViewState.IdRef="Sequence_2">
+            <sap:WorkflowViewStateService.ViewState>
+              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                <x:Boolean x:Key="IsPinned">False</x:Boolean>
+              </scg:Dictionary>
+            </sap:WorkflowViewStateService.ViewState>
+            <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtLandTaxAssessments]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_5" PreserveFormat="True" SheetName="LandTaxAssessments" WorkbookPath="MockData\Mock Data.xlsx" />
+          </Sequence>
+        </Sequence>
+      </ui:CommentOut.Body>
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
           <x:Boolean x:Key="IsPinned">False</x:Boolean>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtCustomerData]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_3" PreserveFormat="True" SheetName="CustomerData" WorkbookPath="MockData\Mock Data.xlsx" />
-      <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtLandTaxAssessments]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_4" PreserveFormat="True" SheetName="LandTaxAssessments" WorkbookPath="MockData\Mock Data.xlsx" />
-    </Sequence>
-    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="GetOutputs.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="450,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetOutputs.xaml">
+    </ui:CommentOut>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="GetOutputs.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="388,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="GetOutputs.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="x:String" x:Key="messageId">[messageId]</InArgument>
-        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_CM">[CM_Data]</OutArgument>
-        <OutArgument x:TypeArguments="scg:IList(sd:DataTable)" x:Key="out_DU">[DU_Data]</OutArgument>
+        <OutArgument x:TypeArguments="scg:IList(sd:DataTable)" x:Key="out_DU">
+          <VisualBasicReference x:TypeArguments="scg:IList(sd:DataTable)" ExpressionText="DU_Data" />
+        </OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_messageId">
+          <VisualBasicValue x:TypeArguments="x:String" ExpressionText="messageId" />
+        </InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_DtCustomerData">
+          <VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="DtCustomerData" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="out_emailTemplate">
+          <VisualBasicValue x:TypeArguments="x:String" ExpressionText="emailTemplate" />
+        </InArgument>
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CompareData.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="450,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="CompareData.xaml">
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CompareData.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="388,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="CompareData.xaml">
       <ui:InvokeWorkflowFile.Arguments>
-        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_CM_Data">
-          <VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="CM_Data" />
-        </InArgument>
         <InArgument x:TypeArguments="scg:IList(sd:DataTable)" x:Key="in_DU_Data">
           <VisualBasicValue x:TypeArguments="scg:IList(sd:DataTable)" ExpressionText="DU_Data" />
         </InArgument>
@@ -151,7 +175,7 @@
         <InArgument x:TypeArguments="x:String" x:Key="BreakTriggerScopeInArgument" />
       </ui:InvokeWorkflowFile.Arguments>
     </ui:InvokeWorkflowFile>
-    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="RespondToCustomer.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="450,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="RespondToCustomer.xaml">
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="RespondToCustomer.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="388,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="RespondToCustomer.xaml">
       <ui:InvokeWorkflowFile.Arguments>
         <InArgument x:TypeArguments="x:String" x:Key="in_DownstreamOutcome">[DownstreamOutcome]</InArgument>
         <InArgument x:TypeArguments="x:String" x:Key="in_MessageID">[messageId]</InArgument>
