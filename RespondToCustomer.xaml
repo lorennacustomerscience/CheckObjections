@@ -1,12 +1,12 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="Repond" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:um="clr-namespace:UiPath.Mail;assembly=UiPath.Mail.Activities" xmlns:umab="clr-namespace:UiPath.Mail.Activities.Business;assembly=UiPath.Mail.Activities" xmlns:umam="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umm="clr-namespace:UiPath.MicrosoftOffice365.Models;assembly=UiPath.MicrosoftOffice365" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="in_DownstreamOutcome" Type="InArgument(x:String)" />
     <x:Property Name="in_MessageID" Type="InArgument(x:String)" />
+    <x:Property Name="in_emailBodyText" Type="InArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>536,1028</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>700,1106</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Repond_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -106,19 +106,19 @@
       <AssemblyReference>UiPath.Workflow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="RespondToCustomer" sap:VirtualizedContainerService.HintSize="546,962.6666666666666" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="RespondToCustomer" sap:VirtualizedContainerService.HintSize="546,1041" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <umab:ExchangeApplicationCard ApplicationId="{x:Null}" SharedMailbox="{x:Null}" TenantId="{x:Null}" Account="Please select an account" ConnectionAccountName="dcsobjections@customerscience.com.au" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Use Outlook 365" sap:VirtualizedContainerService.HintSize="484,852" sap2010:WorkflowViewState.IdRef="ExchangeApplicationCard_1" UseConnectionService="True">
+    <umab:ExchangeApplicationCard ApplicationId="{x:Null}" SharedMailbox="{x:Null}" TenantId="{x:Null}" Account="Please select an account" ConnectionAccountName="dcsobjections@customerscience.com.au" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Use Outlook 365" sap:VirtualizedContainerService.HintSize="484,930" sap2010:WorkflowViewState.IdRef="ExchangeApplicationCard_1" UseConnectionService="True">
       <umab:ExchangeApplicationCard.Body>
         <ActivityAction x:TypeArguments="um:IMailQuickHandle">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="um:IMailQuickHandle" Name="Exchange" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Do" sap:VirtualizedContainerService.HintSize="450,618" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence DisplayName="Identify email and Reply to customer" sap:VirtualizedContainerService.HintSize="450,708" sap2010:WorkflowViewState.IdRef="Sequence_2">
             <Sequence.Variables>
               <Variable x:TypeArguments="umm:Office365Message" Name="temp_Email" />
             </Sequence.Variables>
@@ -127,8 +127,8 @@
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <umam:GetEmailByIdConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" SharedMailbox="{x:Null}" AuthScopesInvalid="False" BodyAsHtml="False" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Get Email By Id" EmailId="[in_MessageID]" sap:VirtualizedContainerService.HintSize="388,154.66666666666666" sap2010:WorkflowViewState.IdRef="GetEmailByIdConnections_1" Result="[temp_Email]" UseConnectionService="True" />
-            <umam:ReplyToEmailConnections ArgumentAttachments="{x:Null}" Attachments="{x:Null}" Bcc="{x:Null}" Cc="{x:Null}" ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" NewSubject="{x:Null}" ReplyAs="{x:Null}" SingleAttachment="{x:Null}" To="{x:Null}" AttachmentInputMode="Existing" AuthScopesInvalid="False" Body="[string.Format(&quot;&lt;P&gt;&lt;SPAN&gt;Hello,&lt;/SPAN&gt;&lt;/P&gt;&lt;br&gt;&lt;/br&gt;&lt;P&gt;&lt;SPAN&gt;{0}&lt;/SPAN&gt;&lt;/P&gt;&lt;br&gt;&lt;/br&gt;&lt;P&gt;&lt;SPAN&gt;Regards,&lt;/SPAN&gt;&lt;/P&gt;&lt;br&gt;&lt;/br&gt;&lt;P&gt;&lt;SPAN&gt;DCS Objections Robot&lt;/SPAN&gt;&lt;/P&gt;&quot;, in_DownstreamOutcome)]" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Reply To Email" Email="[temp_Email]" sap:VirtualizedContainerService.HintSize="388,312.6666666666667" sap2010:WorkflowViewState.IdRef="ReplyToEmailConnections_1" Importance="Normal" ReplyToAll="False" SaveAsDraft="False" UseConnectionService="True">
+            <umam:GetEmailByIdConnections ConnectionAccountName="{x:Null}" ContinueOnError="{x:Null}" SharedMailbox="{x:Null}" AuthScopesInvalid="False" BodyAsHtml="False" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Get Email By Id" EmailId="[in_MessageID]" sap:VirtualizedContainerService.HintSize="388,152" sap2010:WorkflowViewState.IdRef="GetEmailByIdConnections_1" Result="[temp_Email]" UseConnectionService="True" />
+            <umam:ReplyToEmailConnections ArgumentAttachments="{x:Null}" ConnectionAccountName="{x:Null}" AttachmentInputMode="Existing" Attachments="{x:Null}" AuthScopesInvalid="False" Bcc="{x:Null}" Body="[in_emailBodyText]" Cc="{x:Null}" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" ContinueOnError="{x:Null}" DisplayName="Reply To Email" Email="[temp_Email]" sap:VirtualizedContainerService.HintSize="388,405" sap2010:WorkflowViewState.IdRef="ReplyToEmailConnections_1" Importance="Normal" NewSubject="{x:Null}" ReplyAs="{x:Null}" ReplyToAll="False" SaveAsDraft="False" SingleAttachment="{x:Null}" To="{x:Null}" UseConnectionService="True">
               <umam:ReplyToEmailConnections.AttachmentsBackup>
                 <usau:BackupSlot x:TypeArguments="umame:AttachmentInputMode" StoredValue="Existing">
                   <usau:BackupSlot.BackupValues>
