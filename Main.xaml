@@ -109,7 +109,7 @@
       <AssemblyReference>netstandard</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="550,748" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Main Sequence" sap:VirtualizedContainerService.HintSize="512,637" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="sd:DataTable" Name="DtCustomerData" />
       <Variable x:TypeArguments="sd:DataTable" Name="DtAssessments" />
@@ -122,7 +122,7 @@
         <x:Boolean x:Key="IsPinned">False</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Sequence DisplayName="Read Mock Data" sap:VirtualizedContainerService.HintSize="488,80" sap2010:WorkflowViewState.IdRef="Sequence_6">
+    <Sequence DisplayName="Read Mock Data" sap:VirtualizedContainerService.HintSize="450,80" sap2010:WorkflowViewState.IdRef="Sequence_6">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -162,7 +162,7 @@
       </ui:ForEachRow>
       <ui:ReadRange AddHeaders="True" DataTable="[DtAssessments]" DisplayName="Read Range Workbook" sap:VirtualizedContainerService.HintSize="388,88" sap2010:WorkflowViewState.IdRef="ReadRange_5" PreserveFormat="True" Range="A1" SheetName="Assessments" WorkbookPath="MockData\Mock Data.xlsx" />
     </Sequence>
-    <TryCatch DisplayName="Try Catch - Identify Assessment Id" sap:VirtualizedContainerService.HintSize="488,25" sap2010:WorkflowViewState.IdRef="TryCatch_2">
+    <TryCatch DisplayName="Try Catch - Identify Assessment Id" sap:VirtualizedContainerService.HintSize="450,25" sap2010:WorkflowViewState.IdRef="TryCatch_2">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -207,7 +207,7 @@
         </Catch>
       </TryCatch.Catches>
     </TryCatch>
-    <TryCatch DisplayName="Try Catch - Process case" sap:VirtualizedContainerService.HintSize="488,452" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Try Catch - Process case" sap:VirtualizedContainerService.HintSize="450,341" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Variables>
         <Variable x:TypeArguments="x:String" Name="emailBodyText" />
       </TryCatch.Variables>
@@ -220,27 +220,17 @@
           </sap:WorkflowViewStateService.ViewState>
           <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="CompareData.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="388,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="CompareData.xaml">
             <ui:InvokeWorkflowFile.Arguments>
-              <InArgument x:TypeArguments="x:String" x:Key="in_messageId">
-                <VisualBasicValue x:TypeArguments="x:String" ExpressionText="messageId" />
-              </InArgument>
-              <InArgument x:TypeArguments="sd:DataTable" x:Key="in_DtCustomerData">
-                <VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="DtCustomerData" />
-              </InArgument>
-              <InArgument x:TypeArguments="u:MARS" x:Key="in_firstRecord">
-                <VisualBasicValue x:TypeArguments="u:MARS" ExpressionText="firstRecord" />
-              </InArgument>
-              <InArgument x:TypeArguments="sd:DataTable" x:Key="in_DtAssessments">
-                <VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="DtAssessments" />
-              </InArgument>
-              <OutArgument x:TypeArguments="x:String" x:Key="out_emailBody">
-                <VisualBasicReference x:TypeArguments="x:String" ExpressionText="emailBodyText" />
-              </OutArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="in_messageId">[messageId]</InArgument>
+              <InArgument x:TypeArguments="sd:DataTable" x:Key="in_DtCustomerData">[DtCustomerData]</InArgument>
+              <InArgument x:TypeArguments="u:MARS" x:Key="in_firstRecord">[firstRecord]</InArgument>
+              <InArgument x:TypeArguments="sd:DataTable" x:Key="in_DtAssessments">[DtAssessments]</InArgument>
+              <OutArgument x:TypeArguments="x:String" x:Key="out_emailBody">[emailBodyText]</OutArgument>
             </ui:InvokeWorkflowFile.Arguments>
           </ui:InvokeWorkflowFile>
         </Sequence>
       </TryCatch.Try>
       <TryCatch.Catches>
-        <Catch x:TypeArguments="ui:BusinessRuleException" sap:VirtualizedContainerService.HintSize="454,21" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+        <Catch x:TypeArguments="ui:BusinessRuleException" sap:VirtualizedContainerService.HintSize="404,21" sap2010:WorkflowViewState.IdRef="Catch`1_1">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
               <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -270,8 +260,15 @@
       <TryCatch.Finally>
         <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="RespondToCustomer.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="334,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="RespondToCustomer.xaml">
           <ui:InvokeWorkflowFile.Arguments>
-            <InArgument x:TypeArguments="x:String" x:Key="in_MessageID">[messageId]</InArgument>
-            <InArgument x:TypeArguments="x:String" x:Key="in_emailBodyText">[emailBodyText]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_MessageID">
+              <VisualBasicValue x:TypeArguments="x:String" ExpressionText="messageId" />
+            </InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_emailBodyText">
+              <VisualBasicValue x:TypeArguments="x:String" ExpressionText="emailBodyText" />
+            </InArgument>
+            <InArgument x:TypeArguments="u:MARS" x:Key="in_MARSRecord">
+              <VisualBasicValue x:TypeArguments="u:MARS" ExpressionText="firstRecord" />
+            </InArgument>
           </ui:InvokeWorkflowFile.Arguments>
         </ui:InvokeWorkflowFile>
       </TryCatch.Finally>

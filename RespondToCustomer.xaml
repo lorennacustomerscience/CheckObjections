@@ -1,12 +1,16 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="Repond" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:um="clr-namespace:UiPath.Mail;assembly=UiPath.Mail.Activities" xmlns:umab="clr-namespace:UiPath.Mail.Activities.Business;assembly=UiPath.Mail.Activities" xmlns:umam="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umm="clr-namespace:UiPath.MicrosoftOffice365.Models;assembly=UiPath.MicrosoftOffice365" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="Repond" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:this="clr-namespace:" xmlns:u="clr-namespace:UseCase2_Objections_DownstreamProcessing;assembly=DataService.UseCase2_Objections_DownstreamProcessing" xmlns:uda="clr-namespace:UiPath.DataService.Activities;assembly=UiPath.DataService.Activities.Core" xmlns:udam="clr-namespace:UiPath.DataService.Activities.Models;assembly=UiPath.DataService.Activities.Core" xmlns:um="clr-namespace:UiPath.Mail;assembly=UiPath.Mail.Activities" xmlns:umab="clr-namespace:UiPath.Mail.Activities.Business;assembly=UiPath.Mail.Activities" xmlns:umam="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umame="clr-namespace:UiPath.MicrosoftOffice365.Activities.Mail.Enums;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:umm="clr-namespace:UiPath.MicrosoftOffice365.Models;assembly=UiPath.MicrosoftOffice365" xmlns:usau="clr-namespace:UiPath.Shared.Activities.Utils;assembly=UiPath.MicrosoftOffice365.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
     <x:Property Name="in_MessageID" Type="InArgument(x:String)" />
     <x:Property Name="in_emailBodyText" Type="InArgument(x:String)" />
+    <x:Property Name="in_MARSRecord" Type="InArgument(u:MARS)" />
   </x:Members>
+  <this:Repond.in_MARSRecord>
+    <InArgument x:TypeArguments="u:MARS" />
+  </this:Repond.in_MARSRecord>
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1156,1228</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1156,827</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Repond_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -50,6 +54,10 @@
       <x:String>UiPath.MicrosoftOffice365.Activities.Mail</x:String>
       <x:String>UiPath.MicrosoftOffice365.Activities</x:String>
       <x:String>UiPath.Shared.Services.Graph.Mail.Contracts</x:String>
+      <x:String>UseCase2_Objections_DownstreamProcessing</x:String>
+      <x:String>UiPath.DataService.Definition</x:String>
+      <x:String>UiPath.DataService.Activities</x:String>
+      <x:String>UiPath.DataService.Activities.Models</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -104,15 +112,19 @@
       <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
       <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
       <AssemblyReference>UiPath.Workflow</AssemblyReference>
+      <AssemblyReference>netstandard</AssemblyReference>
+      <AssemblyReference>DataService.UseCase2_Objections_DownstreamProcessing</AssemblyReference>
+      <AssemblyReference>UiPath.DataService.Definition</AssemblyReference>
+      <AssemblyReference>UiPath.DataService.Activities.Core</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="RespondToCustomer" sap:VirtualizedContainerService.HintSize="592,1163" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="RespondToCustomer" sap:VirtualizedContainerService.HintSize="450,400" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <umab:ExchangeApplicationCard ApplicationId="{x:Null}" SharedMailbox="{x:Null}" TenantId="{x:Null}" Account="Please select an account" ConnectionAccountName="dcsobjections@customerscience.com.au" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Use Outlook 365" sap:VirtualizedContainerService.HintSize="530,1052" sap2010:WorkflowViewState.IdRef="ExchangeApplicationCard_1" UseConnectionService="True">
+    <umab:ExchangeApplicationCard ApplicationId="{x:Null}" SharedMailbox="{x:Null}" TenantId="{x:Null}" Account="Please select an account" ConnectionAccountName="dcsobjections@customerscience.com.au" ConnectionId="989123ac-532f-4ef6-89df-65af3d736a7e" DisplayName="Use Outlook 365" sap:VirtualizedContainerService.HintSize="388,25" sap2010:WorkflowViewState.IdRef="ExchangeApplicationCard_1" UseConnectionService="True">
       <umab:ExchangeApplicationCard.Body>
         <ActivityAction x:TypeArguments="um:IMailQuickHandle">
           <ActivityAction.Argument>
@@ -153,6 +165,27 @@
           <Literal x:TypeArguments="x:String" Value="" />
         </InArgument>
       </umab:ExchangeApplicationCard.EmailAddress>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
     </umab:ExchangeApplicationCard>
+    <uda:UpdateEntityRecord x:TypeArguments="u:MARS" InputEntity="{x:Null}" IsInRecordView="{x:Null}" OutputEntity="{x:Null}" VisibleDynamicPropertiesInfo="{x:Null}" ContinueOnError="False" DisplayName="Update Entity Record" EntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" ExpansionDepth="2" sap:VirtualizedContainerService.HintSize="388,224" sap2010:WorkflowViewState.IdRef="UpdateEntityRecord`1_1" InputEntityInFieldView="[new UseCase2_Objections_DownstreamProcessing.MARS() With {  .Status = UseCase2_Objections_DownstreamProcessing.MESAStatus.Completed, .Id = in_MARSRecord.Id }]" RecordId="[in_MARSRecord.Id]" TimeoutInMs="30000">
+      <uda:UpdateEntityRecord.State>
+        <udam:RecordState>
+          <udam:RecordState.SelectedFields>
+            <scg:List x:TypeArguments="udam:DynamicEntityField" Capacity="1">
+              <udam:DynamicEntityField Id="c1eeff08-1ab4-ee11-8925-6045bd3f9728" Name="Status">
+                <udam:DynamicEntityField.ArgumentValue>
+                  <InArgument x:TypeArguments="u:MESAStatus">[UseCase2_Objections_DownstreamProcessing.MESAStatus.Completed]</InArgument>
+                </udam:DynamicEntityField.ArgumentValue>
+              </udam:DynamicEntityField>
+            </scg:List>
+          </udam:RecordState.SelectedFields>
+        </udam:RecordState>
+      </uda:UpdateEntityRecord.State>
+    </uda:UpdateEntityRecord>
   </Sequence>
 </Activity>
