@@ -2,15 +2,14 @@
   <x:Members>
     <x:Property Name="in_messageId" Type="InArgument(x:String)" />
     <x:Property Name="in_DtCustomerData" Type="InArgument(sd:DataTable)" />
-    <x:Property Name="out_comparisonOutputMsg" Type="OutArgument(x:String)" />
-    <x:Property Name="out_emailBodyTemplatePath" Type="OutArgument(x:String)" />
     <x:Property Name="in_firstRecord" Type="InArgument(u:MARS)" />
     <x:Property Name="in_DtAssessments" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="out_emailBody" Type="OutArgument(x:String)" />
   </x:Members>
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>701,3789</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1156,2082</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>GetOutputs_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -56,6 +55,16 @@
       <x:String>UiPath.Excel.Activities</x:String>
       <x:String>UseCase2_Objections_DownstreamProcessing</x:String>
       <x:String>UiPath.DataService.Definition</x:String>
+      <x:String>UiPath.Shared.Activities.Utils</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Files.Enums</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Files.Models</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Excel.Enums</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Enums</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Excel.Models</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Excel</x:String>
+      <x:String>UiPath.Shared.Activities.ConnectionService.Contracts</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities.Contracts</x:String>
+      <x:String>UiPath.MicrosoftOffice365.Activities</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -127,36 +136,41 @@
       <AssemblyReference>DataService.UseCase2_Objections_DownstreamProcessing</AssemblyReference>
       <AssemblyReference>netstandard</AssemblyReference>
       <AssemblyReference>UiPath.DataService.Definition</AssemblyReference>
+      <AssemblyReference>System.Linq.Async</AssemblyReference>
+      <AssemblyReference>System.Linq.Async.Queryable</AssemblyReference>
+      <AssemblyReference>UiPath.MicrosoftOffice365.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.MicrosoftOffice365</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="CompareData" sap:VirtualizedContainerService.HintSize="711,3724" sap2010:WorkflowViewState.IdRef="Sequence_13">
+  <Sequence DisplayName="CompareData" sap:VirtualizedContainerService.HintSize="664,2017" sap2010:WorkflowViewState.IdRef="Sequence_13">
     <Sequence.Variables>
       <Variable x:TypeArguments="scg:IEnumerable(ui:QueueItem)" Name="QueueItems" />
       <Variable x:TypeArguments="x:String" Name="temp_sbfilepath" />
       <Variable x:TypeArguments="sd:DataTable" Name="DtOutputDU" />
       <Variable x:TypeArguments="sd:DataTable" Name="DtFilteredCustomerData" />
       <Variable x:TypeArguments="x:String" Name="clientId" />
-      <Variable x:TypeArguments="sd:DataTable" Name="DtFilteredAssessments" />
+      <Variable x:TypeArguments="sd:DataRow[]" Name="filteredAssessments" />
+      <Variable x:TypeArguments="sd:DataTable" Name="DtBankTransactions" />
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:GetQueueItems Duration="{x:Null}" From="{x:Null}" Priority="{x:Null}" Reference="{x:Null}" Skip="{x:Null}" TimeoutMS="{x:Null}" To="{x:Null}" Top="{x:Null}" DisplayName="Get Queue Items" FilterStrategy="Equals" FolderPath="Shared" sap:VirtualizedContainerService.HintSize="649,144" sap2010:WorkflowViewState.IdRef="GetQueueItems_1" QueueItemStates="New, InProgress" QueueName="Objections_Final" Result="[QueueItems]" />
-    <ui:ForEach x:TypeArguments="ui:QueueItem" CurrentIndex="{x:Null}" DisplayName="For Each queue item in Objections_Final" sap:VirtualizedContainerService.HintSize="649,1054" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[QueueItems]">
+    <ui:GetQueueItems Duration="{x:Null}" From="{x:Null}" Priority="{x:Null}" Reference="{x:Null}" Skip="{x:Null}" TimeoutMS="{x:Null}" To="{x:Null}" Top="{x:Null}" DisplayName="Get Queue Items" FilterStrategy="Equals" FolderPath="Shared" sap:VirtualizedContainerService.HintSize="602,143" sap2010:WorkflowViewState.IdRef="GetQueueItems_1" QueueItemStates="New" QueueName="Objections_Final" Result="[QueueItems]" />
+    <ui:ForEach x:TypeArguments="ui:QueueItem" CurrentIndex="{x:Null}" DisplayName="For Each queue item in Objections_Final" sap:VirtualizedContainerService.HintSize="602,1284" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[QueueItems]">
       <ui:ForEach.Body>
         <ActivityAction x:TypeArguments="ui:QueueItem">
           <ActivityAction.Argument>
             <DelegateInArgument x:TypeArguments="ui:QueueItem" Name="currentItem" />
           </ActivityAction.Argument>
-          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="615,866" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="568,1098" sap2010:WorkflowViewState.IdRef="Sequence_2">
             <sap:WorkflowViewStateService.ViewState>
               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
               </scg:Dictionary>
             </sap:WorkflowViewStateService.ViewState>
-            <If Condition="[currentItem.SpecificContent(&quot;MessageID&quot;).ToString = in_messageId]" DisplayName="If - Message ID matches" sap:VirtualizedContainerService.HintSize="573,778" sap2010:WorkflowViewState.IdRef="If_1">
+            <If Condition="[currentItem.SpecificContent(&quot;MessageID&quot;).ToString = in_messageId]" DisplayName="If - Message ID matches" sap:VirtualizedContainerService.HintSize="526,1010" sap2010:WorkflowViewState.IdRef="If_1">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -164,13 +178,14 @@
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
               <If.Then>
-                <Sequence sap:VirtualizedContainerService.HintSize="539,514" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                <Sequence sap:VirtualizedContainerService.HintSize="492,828" sap2010:WorkflowViewState.IdRef="Sequence_3">
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <Sequence DisplayName="Download and Read DU output" sap:VirtualizedContainerService.HintSize="497,83" sap2010:WorkflowViewState.IdRef="Sequence_45">
+                  <ui:GetQueueItem ContinueOnError="{x:Null}" TimeoutMS="{x:Null}" TransactionItem="{x:Null}" DisplayName="Get Transaction Item" FilterStrategy="Equals" sap:VirtualizedContainerService.HintSize="450,143" sap2010:WorkflowViewState.IdRef="GetQueueItem_3" QueueType="Objections_Final" Reference="[currentItem.Reference]" />
+                  <Sequence DisplayName="Download and Read DU output" sap:VirtualizedContainerService.HintSize="450,80" sap2010:WorkflowViewState.IdRef="Sequence_45">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -187,57 +202,60 @@
                       </Assign.Value>
                     </Assign>
                     <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtOutputDU]" DisplayName="Read Range temp_sbfilepath" sap:VirtualizedContainerService.HintSize="434,88" sap2010:WorkflowViewState.IdRef="ReadRange_2" SheetName="Simple Fields" WorkbookPath="[temp_sbfilepath]" />
+                    <If Condition="[currentItem.SpecificContent(&quot;DocType&quot;).ToString().Equals(&quot;Semi-StructuredDocuments.Financial.BankStatement&quot;)]" sap:VirtualizedContainerService.HintSize="434,25" sap2010:WorkflowViewState.IdRef="If_14">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <If.Then>
+                        <Sequence sap:VirtualizedContainerService.HintSize="376,176" sap2010:WorkflowViewState.IdRef="Sequence_55">
+                          <sap:WorkflowViewStateService.ViewState>
+                            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            </scg:Dictionary>
+                          </sap:WorkflowViewStateService.ViewState>
+                          <ui:ReadRange Range="{x:Null}" AddHeaders="True" DataTable="[DtBankTransactions]" DisplayName="Read Range temp_sbfilepath" sap:VirtualizedContainerService.HintSize="334,88" sap2010:WorkflowViewState.IdRef="ReadRange_3" SheetName="Statement" WorkbookPath="[temp_sbfilepath]" />
+                        </Sequence>
+                      </If.Then>
+                      <If.Else>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_56" />
+                      </If.Else>
+                    </If>
+                    <ui:DeleteFileX DisplayName="Delete File" sap:VirtualizedContainerService.HintSize="434,80" sap2010:WorkflowViewState.IdRef="DeleteFileX_1" Path="[temp_sbfilepath]" />
                   </Sequence>
-                  <ui:LogMessage DisplayName="Log Message - Doc type" sap:VirtualizedContainerService.HintSize="497,53" sap2010:WorkflowViewState.IdRef="LogMessage_12" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[String.Format(&quot;Doc type: {0}&quot;, currentItem.SpecificContent(&quot;DocType&quot;).ToString)]">
+                  <ui:LogMessage DisplayName="Log Message - Doc type" sap:VirtualizedContainerService.HintSize="450,141" sap2010:WorkflowViewState.IdRef="LogMessage_12" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[String.Format(&quot;Doc type: {0}&quot;, currentItem.SpecificContent(&quot;DocType&quot;).ToString)]">
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                        <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                  </ui:LogMessage>
+                  <Switch x:TypeArguments="x:String" DisplayName="Switch DocType" Expression="[currentItem.SpecificContent(&quot;DocType&quot;).ToString]" sap:VirtualizedContainerService.HintSize="497,332" sap2010:WorkflowViewState.IdRef="Switch`1_1">
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                         <x:Boolean x:Key="IsPinned">False</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                  </ui:LogMessage>
-                  <Switch x:TypeArguments="x:String" DisplayName="Switch DocType" Expression="[currentItem.SpecificContent(&quot;DocType&quot;).ToString]" sap:VirtualizedContainerService.HintSize="497,210" sap2010:WorkflowViewState.IdRef="Switch`1_1">
-                    <Sequence x:Key="Semi-StructuredDocuments.Financial.BankStatement" DisplayName="BankStatement" sap:VirtualizedContainerService.HintSize="634,1447" sap2010:WorkflowViewState.IdRef="Sequence_39">
+                    <Sequence x:Key="Semi-StructuredDocuments.Financial.BankStatement" DisplayName="BankStatement" sap:VirtualizedContainerService.HintSize="572,1125" sap2010:WorkflowViewState.IdRef="Sequence_39">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           <x:Boolean x:Key="IsPinned">False</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <ui:FilterDataTable DataTable="[in_DtCustomerData]" DisplayName="Filter Data Table - DtCustomerData" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="572,163" sap2010:WorkflowViewState.IdRef="FilterDataTable_5" OutputDataTable="[DtFilteredCustomerData]" SelectColumnsMode="Keep">
-                        <ui:FilterDataTable.Filters>
-                          <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["ClientName"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Customer Name")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["Address"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Address")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                          </scg:List>
-                        </ui:FilterDataTable.Filters>
-                        <ui:FilterDataTable.SelectColumns>
-                          <scg:List x:TypeArguments="InArgument" Capacity="4">
-                            <x:Null />
-                          </scg:List>
-                        </ui:FilterDataTable.SelectColumns>
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </ui:FilterDataTable>
-                      <If Condition="[in_DtCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="572,1133" sap2010:WorkflowViewState.IdRef="If_9">
+                      <Assign DisplayName="Filter Customer Data" sap:VirtualizedContainerService.HintSize="510,82" sap2010:WorkflowViewState.IdRef="Assign_20">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="sd:DataTable">[DtFilteredCustomerData]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="sd:DataTable">[in_DtCustomerData.Select(String.Format("[ClientName] LIKE '{0}' AND [Address] LIKE '{1}'",DtOutputDU.Rows(0).Item("Customer Name").ToString().Replace("MRS ","").Replace("MR ",""),DtOutputDU.Rows(0).Item("Address").ToString().Replace(" ",""))).CopyToDataTable()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[DtFilteredCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="510,892" sap2010:WorkflowViewState.IdRef="If_9">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -245,13 +263,13 @@
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
                         <If.Then>
-                          <Sequence sap:VirtualizedContainerService.HintSize="476,354" sap2010:WorkflowViewState.IdRef="Sequence_37">
+                          <Sequence sap:VirtualizedContainerService.HintSize="476,351" sap2010:WorkflowViewState.IdRef="Sequence_37">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Assign DisplayName="Assign - Client Id" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_16">
+                            <Assign DisplayName="Assign - Client Id" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_16">
                               <Assign.To>
                                 <OutArgument x:TypeArguments="x:String">[clientId]</OutArgument>
                               </Assign.To>
@@ -259,7 +277,7 @@
                                 <InArgument x:TypeArguments="x:String">[DtFilteredCustomerData.Rows(0).Item("ClientID").ToString]</InArgument>
                               </Assign.Value>
                             </Assign>
-                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="434,143" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was identified&quot;]">
+                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="434,141" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Customer verified using the bank statement.&quot;]">
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -270,75 +288,34 @@
                           </Sequence>
                         </If.Then>
                         <If.Else>
-                          <Sequence sap:VirtualizedContainerService.HintSize="538,596" sap2010:WorkflowViewState.IdRef="Sequence_38">
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,359" sap2010:WorkflowViewState.IdRef="Sequence_38">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Sequence DisplayName="Client was not identified" sap:VirtualizedContainerService.HintSize="496,508" sap2010:WorkflowViewState.IdRef="Sequence_44">
-                              <sap:WorkflowViewStateService.ViewState>
-                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                                </scg:Dictionary>
-                              </sap:WorkflowViewStateService.ViewState>
-                              <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="434,143" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was not identified&quot;]" />
-                              <Assign DisplayName="Assign - The client was not identified" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_13">
-                                <Assign.To>
-                                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                </Assign.To>
-                                <Assign.Value>
-                                  <InArgument x:TypeArguments="x:String">["The client was not identified"]</InArgument>
-                                </Assign.Value>
-                              </Assign>
-                              <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(out_comparisonOutputMsg)]" sap:VirtualizedContainerService.HintSize="434,91" sap2010:WorkflowViewState.IdRef="Throw_4" />
-                            </Sequence>
+                            <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="[UiPath.Core.Activities.LogLevel.Warn]" Message="[&quot;Unable to verify customer details using the bank statement provided.&quot;]" />
+                            <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(&quot;Unable to verify customer details using the bank statement provided.&quot;)]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="Throw_4" />
                           </Sequence>
                         </If.Else>
                       </If>
                     </Sequence>
-                    <Sequence x:Key="Semi-StructuredDocuments.Bills.CouncilRatesNotice" DisplayName="Council Rates Notice" sap:VirtualizedContainerService.HintSize="588,899" sap2010:WorkflowViewState.IdRef="Sequence_34">
+                    <Sequence x:Key="Semi-StructuredDocuments.Bills.CouncilRatesNotice" DisplayName="Council Rates Notice" sap:VirtualizedContainerService.HintSize="496,1003" sap2010:WorkflowViewState.IdRef="Sequence_34">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                           <x:Boolean x:Key="IsPinned">False</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <ui:FilterDataTable DataTable="[in_DtCustomerData]" DisplayName="Filter Data Table - DtCustomerData" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="526,163" sap2010:WorkflowViewState.IdRef="FilterDataTable_4" OutputDataTable="[DtFilteredCustomerData]" SelectColumnsMode="Keep">
-                        <ui:FilterDataTable.Filters>
-                          <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["ClientName"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Name")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["Address"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Address")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                          </scg:List>
-                        </ui:FilterDataTable.Filters>
-                        <ui:FilterDataTable.SelectColumns>
-                          <scg:List x:TypeArguments="InArgument" Capacity="4">
-                            <x:Null />
-                          </scg:List>
-                        </ui:FilterDataTable.SelectColumns>
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </ui:FilterDataTable>
-                      <If Condition="[in_DtCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="526,585" sap2010:WorkflowViewState.IdRef="If_7">
+                      <Assign DisplayName="Filter Customer Data" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_19">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="sd:DataTable">[DtFilteredCustomerData]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="sd:DataTable">[in_DtCustomerData.Select(String.Format("[ClientName] LIKE '{0}' AND [Address] LIKE '{1}'",DtOutputDU.Rows(0).Item("Name").ToString(),DtOutputDU.Rows(0).Item("Address").ToString().Trim().Replace(" ",""))).CopyToDataTable()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[DtFilteredCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="434,770" sap2010:WorkflowViewState.IdRef="If_7">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -346,13 +323,13 @@
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
                         <If.Then>
-                          <Sequence sap:VirtualizedContainerService.HintSize="376,231" sap2010:WorkflowViewState.IdRef="Sequence_32">
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,229" sap2010:WorkflowViewState.IdRef="Sequence_32">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was identified&quot;]">
+                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Customer verified using the provided council rates notice.&quot;]">
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -363,179 +340,34 @@
                           </Sequence>
                         </If.Then>
                         <If.Else>
-                          <Sequence sap:VirtualizedContainerService.HintSize="492,171" sap2010:WorkflowViewState.IdRef="Sequence_33">
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,359" sap2010:WorkflowViewState.IdRef="Sequence_33">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Sequence DisplayName="Client was not identified" sap:VirtualizedContainerService.HintSize="450,83" sap2010:WorkflowViewState.IdRef="Sequence_43">
-                              <sap:WorkflowViewStateService.ViewState>
-                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                                </scg:Dictionary>
-                              </sap:WorkflowViewStateService.ViewState>
-                              <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="434,141" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was not identified&quot;]" />
-                              <Assign DisplayName="Assign - The client was not identified" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_12">
-                                <Assign.To>
-                                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                </Assign.To>
-                                <Assign.Value>
-                                  <InArgument x:TypeArguments="x:String">["The client was not identified"]</InArgument>
-                                </Assign.Value>
-                              </Assign>
-                              <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(out_comparisonOutputMsg)]" sap:VirtualizedContainerService.HintSize="434,90" sap2010:WorkflowViewState.IdRef="Throw_3" />
-                            </Sequence>
+                            <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Unable to verify customer details using the council rates notice provided.&quot;]" />
+                            <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(&quot;Unable to verify customer details using the council rates notice provided.&quot;)]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="Throw_3" />
                           </Sequence>
                         </If.Else>
                       </If>
                     </Sequence>
-                    <Sequence x:Key="Semi-StructuredDocuments.Bills.UtilityBill" DisplayName="Utility Bill" sap:VirtualizedContainerService.HintSize="588,899" sap2010:WorkflowViewState.IdRef="Sequence_29">
-                      <sap:WorkflowViewStateService.ViewState>
-                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                          <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                        </scg:Dictionary>
-                      </sap:WorkflowViewStateService.ViewState>
-                      <ui:FilterDataTable DataTable="[in_DtCustomerData]" DisplayName="Filter Data Table - DtCustomerData" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="526,163" sap2010:WorkflowViewState.IdRef="FilterDataTable_3" OutputDataTable="[DtFilteredCustomerData]" SelectColumnsMode="Keep">
-                        <ui:FilterDataTable.Filters>
-                          <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["ClientName"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Customer Name")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["Address"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Address")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                          </scg:List>
-                        </ui:FilterDataTable.Filters>
-                        <ui:FilterDataTable.SelectColumns>
-                          <scg:List x:TypeArguments="InArgument" Capacity="4">
-                            <x:Null />
-                          </scg:List>
-                        </ui:FilterDataTable.SelectColumns>
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </ui:FilterDataTable>
-                      <If Condition="[in_DtCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="526,585" sap2010:WorkflowViewState.IdRef="If_5">
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                        <If.Then>
-                          <Sequence sap:VirtualizedContainerService.HintSize="376,231" sap2010:WorkflowViewState.IdRef="Sequence_27">
-                            <sap:WorkflowViewStateService.ViewState>
-                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                              </scg:Dictionary>
-                            </sap:WorkflowViewStateService.ViewState>
-                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="334,143" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was identified&quot;]">
-                              <sap:WorkflowViewStateService.ViewState>
-                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                                </scg:Dictionary>
-                              </sap:WorkflowViewStateService.ViewState>
-                            </ui:LogMessage>
-                          </Sequence>
-                        </If.Then>
-                        <If.Else>
-                          <Sequence sap:VirtualizedContainerService.HintSize="492,171" sap2010:WorkflowViewState.IdRef="Sequence_28">
-                            <sap:WorkflowViewStateService.ViewState>
-                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                              </scg:Dictionary>
-                            </sap:WorkflowViewStateService.ViewState>
-                            <Sequence DisplayName="Client was not identified" sap:VirtualizedContainerService.HintSize="450,83" sap2010:WorkflowViewState.IdRef="Sequence_42">
-                              <sap:WorkflowViewStateService.ViewState>
-                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                                </scg:Dictionary>
-                              </sap:WorkflowViewStateService.ViewState>
-                              <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="434,141" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was not identified&quot;]" />
-                              <Assign DisplayName="Assign - The client was not identified" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_11">
-                                <Assign.To>
-                                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                </Assign.To>
-                                <Assign.Value>
-                                  <InArgument x:TypeArguments="x:String">["The client was not identified"]</InArgument>
-                                </Assign.Value>
-                              </Assign>
-                              <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(out_comparisonOutputMsg)]" sap:VirtualizedContainerService.HintSize="434,90" sap2010:WorkflowViewState.IdRef="Throw_2" />
-                            </Sequence>
-                          </Sequence>
-                        </If.Else>
-                      </If>
-                    </Sequence>
-                    <Sequence x:Key="Semi-StructuredDocuments.IDCards.DriversLicense" DisplayName="Drivers License" sap:VirtualizedContainerService.HintSize="450,83" sap2010:WorkflowViewState.IdRef="Sequence_18">
-                      <Sequence.Variables>
-                        <Variable x:TypeArguments="x:String" Name="firstName" />
-                      </Sequence.Variables>
+                    <Sequence x:Key="Semi-StructuredDocuments.Bills.UtilityBill" DisplayName="Utility Bill" sap:VirtualizedContainerService.HintSize="450,80" sap2010:WorkflowViewState.IdRef="Sequence_29">
                       <sap:WorkflowViewStateService.ViewState>
                         <scg:Dictionary x:TypeArguments="x:String, x:Object">
                           <x:Boolean x:Key="IsExpanded">False</x:Boolean>
                           <x:Boolean x:Key="IsPinned">False</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
-                      <ui:FilterDataTable DataTable="[in_DtCustomerData]" DisplayName="Filter Data Table - DtCustomerData" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="586,163" sap2010:WorkflowViewState.IdRef="FilterDataTable_2" OutputDataTable="[DtFilteredCustomerData]" SelectColumnsMode="Keep">
-                        <ui:FilterDataTable.Filters>
-                          <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["First Name"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("FirstName")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["Last Name"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("LastName")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                            <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                              <ui:FilterOperationArgument.Column>
-                                <InArgument x:TypeArguments="x:String">["Address"]</InArgument>
-                              </ui:FilterOperationArgument.Column>
-                              <ui:FilterOperationArgument.Operand>
-                                <InArgument x:TypeArguments="x:Object">[DtOutputDU.Rows(0).Item("Address")]</InArgument>
-                              </ui:FilterOperationArgument.Operand>
-                            </ui:FilterOperationArgument>
-                          </scg:List>
-                        </ui:FilterDataTable.Filters>
-                        <ui:FilterDataTable.SelectColumns>
-                          <scg:List x:TypeArguments="InArgument" Capacity="4">
-                            <x:Null />
-                          </scg:List>
-                        </ui:FilterDataTable.SelectColumns>
-                        <sap:WorkflowViewStateService.ViewState>
-                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                          </scg:Dictionary>
-                        </sap:WorkflowViewStateService.ViewState>
-                      </ui:FilterDataTable>
-                      <If Condition="[in_DtCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="586,1273" sap2010:WorkflowViewState.IdRef="If_3">
+                      <Assign DisplayName="Filter Customer Data" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_28">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="sd:DataTable">[DtFilteredCustomerData]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="sd:DataTable">[in_DtCustomerData.Select(String.Format("[ClientName] LIKE '{0}' AND [Address] LIKE '{1}'",DtOutputDU.Rows(0).Item("Customer Name").ToString(),DtOutputDU.Rows(0).Item("Address").ToString().Trim().Replace(" ",""))).CopyToDataTable()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[DtFilteredCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="434,770" sap2010:WorkflowViewState.IdRef="If_5">
                         <sap:WorkflowViewStateService.ViewState>
                           <scg:Dictionary x:TypeArguments="x:String, x:Object">
                             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -543,21 +375,13 @@
                           </scg:Dictionary>
                         </sap:WorkflowViewStateService.ViewState>
                         <If.Then>
-                          <Sequence sap:VirtualizedContainerService.HintSize="552,919" sap2010:WorkflowViewState.IdRef="Sequence_19">
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,229" sap2010:WorkflowViewState.IdRef="Sequence_27">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Assign DisplayName="Assign - The client was identified" sap:VirtualizedContainerService.HintSize="510,83" sap2010:WorkflowViewState.IdRef="Assign_8">
-                              <Assign.To>
-                                <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                              </Assign.To>
-                              <Assign.Value>
-                                <InArgument x:TypeArguments="x:String">The client was identified</InArgument>
-                              </Assign.Value>
-                            </Assign>
-                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="510,143" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was identified&quot;]">
+                            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Customer details verified using the utility bill provided.&quot;]">
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
@@ -565,74 +389,111 @@
                                 </scg:Dictionary>
                               </sap:WorkflowViewStateService.ViewState>
                             </ui:LogMessage>
-                            <If Condition="[CDate(DtOutputDU.Rows(0).Item(&quot;DateOfExpiry&quot;)) &gt; Today]" DisplayName="If - Check date of expiry" sap:VirtualizedContainerService.HintSize="510,525" sap2010:WorkflowViewState.IdRef="If_4">
+                          </Sequence>
+                        </If.Then>
+                        <If.Else>
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,359" sap2010:WorkflowViewState.IdRef="Sequence_28">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Unable to verify customer using the utility bill provided.&quot;]" />
+                            <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(&quot;Unable to verify customer using the utility bill provided.&quot;)]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="Throw_2" />
+                          </Sequence>
+                        </If.Else>
+                      </If>
+                    </Sequence>
+                    <Sequence x:Key="Semi-StructuredDocuments.IDCards.DriversLicense" DisplayName="Drivers License" sap:VirtualizedContainerService.HintSize="548,1683" sap2010:WorkflowViewState.IdRef="Sequence_18">
+                      <sap:WorkflowViewStateService.ViewState>
+                        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+                          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                        </scg:Dictionary>
+                      </sap:WorkflowViewStateService.ViewState>
+                      <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="486,141" sap2010:WorkflowViewState.IdRef="LogMessage_19" Message="[String.Format(&quot;[First Name] LIKE '{0}' AND [Last Name] LIKE '{1}' AND [Address] LIKE '{2}'&quot;,DtOutputDU.Rows(0).Item(&quot;FirstName&quot;).ToString(),DtOutputDU.Rows(0).Item(&quot;LastName&quot;).ToString(),DtOutputDU.Rows(0).Item(&quot;Address&quot;).ToString().Trim().Replace(&quot; &quot;,&quot;&quot;))]" />
+                      <Assign DisplayName="Filter Customer Data" sap:VirtualizedContainerService.HintSize="486,82" sap2010:WorkflowViewState.IdRef="Assign_29">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="sd:DataTable">[DtFilteredCustomerData]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="sd:DataTable">[in_DtCustomerData.Select(String.Format("[First Name] LIKE '{0}' AND [Last Name] LIKE '{1}' AND [Address] LIKE '{2}'",DtOutputDU.Rows(0).Item("FirstName").ToString(),DtOutputDU.Rows(0).Item("LastName").ToString(),DtOutputDU.Rows(0).Item("Address").ToString().Trim().Replace(" ",""))).CopyToDataTable()]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <If Condition="[DtFilteredCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="486,1269" sap2010:WorkflowViewState.IdRef="If_3">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                        <If.Then>
+                          <Sequence sap:VirtualizedContainerService.HintSize="452,728" sap2010:WorkflowViewState.IdRef="Sequence_19">
+                            <sap:WorkflowViewStateService.ViewState>
+                              <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                              </scg:Dictionary>
+                            </sap:WorkflowViewStateService.ViewState>
+                            <If Condition="[CDate(DtOutputDU.Rows(0).Item(&quot;DateOfExpiry&quot;)) &gt;= Today]" DisplayName="If - Check date of expiry" sap:VirtualizedContainerService.HintSize="410,640" sap2010:WorkflowViewState.IdRef="If_4">
                               <If.Then>
-                                <Sequence sap:VirtualizedContainerService.HintSize="476,171" sap2010:WorkflowViewState.IdRef="Sequence_21">
+                                <Sequence sap:VirtualizedContainerService.HintSize="376,229" sap2010:WorkflowViewState.IdRef="Sequence_21">
                                   <sap:WorkflowViewStateService.ViewState>
                                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                     </scg:Dictionary>
                                   </sap:WorkflowViewStateService.ViewState>
-                                  <Assign DisplayName="Assign - The driver license is valid" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_6">
-                                    <Assign.To>
-                                      <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                    </Assign.To>
-                                    <Assign.Value>
-                                      <InArgument x:TypeArguments="x:String">["The driver license is valid"]</InArgument>
-                                    </Assign.Value>
-                                  </Assign>
+                                  <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Customer verified using Drivers license.&quot;]">
+                                    <sap:WorkflowViewStateService.ViewState>
+                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                                      </scg:Dictionary>
+                                    </sap:WorkflowViewStateService.ViewState>
+                                  </ui:LogMessage>
                                 </Sequence>
                               </If.Then>
                               <If.Else>
-                                <Sequence sap:VirtualizedContainerService.HintSize="476,171" sap2010:WorkflowViewState.IdRef="Sequence_22">
+                                <Sequence sap:VirtualizedContainerService.HintSize="376,229" sap2010:WorkflowViewState.IdRef="Sequence_22">
                                   <sap:WorkflowViewStateService.ViewState>
                                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                       <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                                     </scg:Dictionary>
                                   </sap:WorkflowViewStateService.ViewState>
-                                  <Assign DisplayName="Assign - The driver license is expired" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_7">
-                                    <Assign.To>
-                                      <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                    </Assign.To>
-                                    <Assign.Value>
-                                      <InArgument x:TypeArguments="x:String">["The driver license is expired"]</InArgument>
-                                    </Assign.Value>
-                                  </Assign>
+                                  <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_18" Level="[UiPath.Core.Activities.LogLevel.Warn]" Message="[&quot;Customer connot be verified. Drivers license expired.&quot;]">
+                                    <sap:WorkflowViewStateService.ViewState>
+                                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                                        <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                                      </scg:Dictionary>
+                                    </sap:WorkflowViewStateService.ViewState>
+                                  </ui:LogMessage>
                                 </Sequence>
                               </If.Else>
                             </If>
                           </Sequence>
                         </If.Then>
                         <If.Else>
-                          <Sequence sap:VirtualizedContainerService.HintSize="492,171" sap2010:WorkflowViewState.IdRef="Sequence_20">
+                          <Sequence sap:VirtualizedContainerService.HintSize="376,359" sap2010:WorkflowViewState.IdRef="Sequence_20">
                             <sap:WorkflowViewStateService.ViewState>
                               <scg:Dictionary x:TypeArguments="x:String, x:Object">
                                 <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                               </scg:Dictionary>
                             </sap:WorkflowViewStateService.ViewState>
-                            <Sequence DisplayName="Client was not identified" sap:VirtualizedContainerService.HintSize="450,83" sap2010:WorkflowViewState.IdRef="Sequence_41">
-                              <sap:WorkflowViewStateService.ViewState>
-                                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                                  <x:Boolean x:Key="IsExpanded">False</x:Boolean>
-                                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                                </scg:Dictionary>
-                              </sap:WorkflowViewStateService.ViewState>
-                              <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="434,141" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was not identified&quot;]" />
-                              <Assign DisplayName="Assign - The client was not identified" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_9">
-                                <Assign.To>
-                                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                                </Assign.To>
-                                <Assign.Value>
-                                  <InArgument x:TypeArguments="x:String">["The client was not identified"]</InArgument>
-                                </Assign.Value>
-                              </Assign>
-                              <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(out_comparisonOutputMsg)]" sap:VirtualizedContainerService.HintSize="434,90" sap2010:WorkflowViewState.IdRef="Throw_1" />
-                            </Sequence>
+                            <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="334,141" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="[UiPath.Core.Activities.LogLevel.Warn]" Message="[&quot;Unable to verify customer using drivers license.&quot;]" />
+                            <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(&quot;Unable to verify customer using drivers license.&quot;)]" sap:VirtualizedContainerService.HintSize="334,90" sap2010:WorkflowViewState.IdRef="Throw_1" />
                           </Sequence>
                         </If.Else>
                       </If>
                     </Sequence>
                   </Switch>
+                  <ui:SetTransactionStatus ContinueOnError="{x:Null}" Reason="{x:Null}" ServiceBaseAddress="{x:Null}" TimeoutMS="{x:Null}" DisplayName="Set Transaction Status" ErrorType="Business" sap:VirtualizedContainerService.HintSize="450,191" sap2010:WorkflowViewState.IdRef="SetTransactionStatus_2" Status="Successful" TransactionItem="[currentItem]">
+                    <ui:SetTransactionStatus.Analytics>
+                      <scg:Dictionary x:TypeArguments="x:String, InArgument" />
+                    </ui:SetTransactionStatus.Analytics>
+                    <ui:SetTransactionStatus.Output>
+                      <scg:Dictionary x:TypeArguments="x:String, InArgument" />
+                    </ui:SetTransactionStatus.Output>
+                  </ui:SetTransactionStatus>
                 </Sequence>
               </If.Then>
               <If.Else>
@@ -655,167 +516,123 @@
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
     </ui:ForEach>
-    <Sequence DisplayName="Land Tax" sap:VirtualizedContainerService.HintSize="649,1244" sap2010:WorkflowViewState.IdRef="Sequence_49">
-      <sap:WorkflowViewStateService.ViewState>
-        <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          <x:Boolean x:Key="IsPinned">False</x:Boolean>
-        </scg:Dictionary>
-      </sap:WorkflowViewStateService.ViewState>
-      <If Condition="[DtFilteredCustomerData.RowCount = 1]" DisplayName="(If) Identify client" sap:VirtualizedContainerService.HintSize="572,1133" sap2010:WorkflowViewState.IdRef="If_11">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-            <x:Boolean x:Key="IsPinned">False</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-        <If.Then>
-          <Sequence sap:VirtualizedContainerService.HintSize="476,354" sap2010:WorkflowViewState.IdRef="Sequence_46">
-            <sap:WorkflowViewStateService.ViewState>
-              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-              </scg:Dictionary>
-            </sap:WorkflowViewStateService.ViewState>
-            <ui:LogMessage DisplayName="Log Message - The client was identified" sap:VirtualizedContainerService.HintSize="434,143" sap2010:WorkflowViewState.IdRef="LogMessage_13" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was identified&quot;]">
-              <sap:WorkflowViewStateService.ViewState>
-                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                </scg:Dictionary>
-              </sap:WorkflowViewStateService.ViewState>
-            </ui:LogMessage>
-            <Assign DisplayName="Assign - Client Id" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_15">
-              <Assign.To>
-                <OutArgument x:TypeArguments="x:String">[clientId]</OutArgument>
-              </Assign.To>
-              <Assign.Value>
-                <InArgument x:TypeArguments="x:String">[DtFilteredCustomerData.Rows(0).Item("ClientID").ToString]</InArgument>
-              </Assign.Value>
-            </Assign>
-          </Sequence>
-        </If.Then>
-        <If.Else>
-          <Sequence sap:VirtualizedContainerService.HintSize="538,596" sap2010:WorkflowViewState.IdRef="Sequence_48">
-            <sap:WorkflowViewStateService.ViewState>
-              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-              </scg:Dictionary>
-            </sap:WorkflowViewStateService.ViewState>
-            <Sequence DisplayName="Client was not identified" sap:VirtualizedContainerService.HintSize="496,508" sap2010:WorkflowViewState.IdRef="Sequence_47">
-              <sap:WorkflowViewStateService.ViewState>
-                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                  <x:Boolean x:Key="IsPinned">False</x:Boolean>
-                </scg:Dictionary>
-              </sap:WorkflowViewStateService.ViewState>
-              <ui:LogMessage DisplayName="Log Message - The client was not identified" sap:VirtualizedContainerService.HintSize="434,143" sap2010:WorkflowViewState.IdRef="LogMessage_14" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;The client was not identified&quot;]" />
-              <Assign DisplayName="Assign - The client was not identified" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_14">
-                <Assign.To>
-                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                </Assign.To>
-                <Assign.Value>
-                  <InArgument x:TypeArguments="x:String">["The client was not identified"]</InArgument>
-                </Assign.Value>
-              </Assign>
-              <Throw DisplayName="Throw BRE - Client not identified" Exception="[New BusinessRuleException(out_comparisonOutputMsg)]" sap:VirtualizedContainerService.HintSize="434,91" sap2010:WorkflowViewState.IdRef="Throw_5" />
-            </Sequence>
-          </Sequence>
-        </If.Else>
-      </If>
-    </Sequence>
-    <Switch x:TypeArguments="x:String" DisplayName="Switch SubCategory" Expression="[in_firstRecord.SubCategory.ToString]" sap:VirtualizedContainerService.HintSize="649,1051" sap2010:WorkflowViewState.IdRef="Switch`1_2">
-      <Sequence x:Key="Payment Already Made" DisplayName="Payment Already Made" sap:VirtualizedContainerService.HintSize="572,839" sap2010:WorkflowViewState.IdRef="Sequence_50">
+    <Switch x:TypeArguments="x:String" DisplayName="Switch SubCategory" Expression="[in_firstRecord.SubCategory.ToString]" sap:VirtualizedContainerService.HintSize="602,399" sap2010:WorkflowViewState.IdRef="Switch`1_2">
+      <Sequence x:Key="PaymentAlreadyMade" DisplayName="Payment Already Made" sap:VirtualizedContainerService.HintSize="648,2109" sap2010:WorkflowViewState.IdRef="Sequence_50">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
-        <ui:FilterDataTable DataTable="[in_DtAssessments]" DisplayName="Filter Data Table - Assessments" FilterRowsMode="Keep" sap:VirtualizedContainerService.HintSize="510,163" sap2010:WorkflowViewState.IdRef="FilterDataTable_9" OutputDataTable="[DtFilteredAssessments]" SelectColumnsMode="Remove">
-          <ui:FilterDataTable.Filters>
-            <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="8">
-              <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                <ui:FilterOperationArgument.Column>
-                  <InArgument x:TypeArguments="x:String">["ClientID"]</InArgument>
-                </ui:FilterOperationArgument.Column>
-                <ui:FilterOperationArgument.Operand>
-                  <InArgument x:TypeArguments="x:String">[ClientID]</InArgument>
-                </ui:FilterOperationArgument.Operand>
-              </ui:FilterOperationArgument>
-              <ui:FilterOperationArgument Operand="{x:Null}" BooleanOperator="And" Operator="NOTEMPTY">
-                <ui:FilterOperationArgument.Column>
-                  <InArgument x:TypeArguments="x:String">["PaymentDate"]</InArgument>
-                </ui:FilterOperationArgument.Column>
-              </ui:FilterOperationArgument>
-              <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                <ui:FilterOperationArgument.Column>
-                  <InArgument x:TypeArguments="x:String">["AmountDue"]</InArgument>
-                </ui:FilterOperationArgument.Column>
-                <ui:FilterOperationArgument.Operand>
-                  <InArgument x:TypeArguments="x:Int32">[0]</InArgument>
-                </ui:FilterOperationArgument.Operand>
-              </ui:FilterOperationArgument>
-              <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                <ui:FilterOperationArgument.Column>
-                  <InArgument x:TypeArguments="x:String">["AssessedAmount"]</InArgument>
-                </ui:FilterOperationArgument.Column>
-                <ui:FilterOperationArgument.Operand>
-                  <InArgument x:TypeArguments="x:String">[in_firstRecord.AssessedAmount]</InArgument>
-                </ui:FilterOperationArgument.Operand>
-              </ui:FilterOperationArgument>
-              <ui:FilterOperationArgument BooleanOperator="And" Operator="EQ">
-                <ui:FilterOperationArgument.Column>
-                  <InArgument x:TypeArguments="x:String">["AssessmentType"]</InArgument>
-                </ui:FilterOperationArgument.Column>
-                <ui:FilterOperationArgument.Operand>
-                  <InArgument x:TypeArguments="x:String">[in_firstRecord.Category.ToString]</InArgument>
-                </ui:FilterOperationArgument.Operand>
-              </ui:FilterOperationArgument>
-            </scg:List>
-          </ui:FilterDataTable.Filters>
-          <ui:FilterDataTable.SelectColumns>
-            <scg:List x:TypeArguments="InArgument" Capacity="4">
-              <x:Null />
-            </scg:List>
-          </ui:FilterDataTable.SelectColumns>
-        </ui:FilterDataTable>
-        <If Condition="[DtFilteredAssessments.RowCount = 1]" DisplayName="Check if payment was identified" sap:VirtualizedContainerService.HintSize="510,525" sap2010:WorkflowViewState.IdRef="If_12">
+        <Assign sap:VirtualizedContainerService.HintSize="586,83" sap2010:WorkflowViewState.IdRef="Assign_21">
+          <Assign.To>
+            <OutArgument x:TypeArguments="sd:DataRow[]">[filteredAssessments]</OutArgument>
+          </Assign.To>
+          <Assign.Value>
+            <InArgument x:TypeArguments="sd:DataRow[]" xml:space="preserve">[in_DtAssessments.Select(
+	String.Format("[ClientID]={0} AND CorrespondenceID={1}", clientId, in_firstRecord.AssessmentID)
+	)]</InArgument>
+          </Assign.Value>
+        </Assign>
+        <If Condition="[filteredAssessments.Length = 1]" DisplayName="Check if payment was identified" sap:VirtualizedContainerService.HintSize="586,1875" sap2010:WorkflowViewState.IdRef="If_12">
           <If.Then>
-            <Sequence sap:VirtualizedContainerService.HintSize="476,171" sap2010:WorkflowViewState.IdRef="Sequence_51">
+            <Sequence sap:VirtualizedContainerService.HintSize="552,1613" sap2010:WorkflowViewState.IdRef="Sequence_51">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <Assign DisplayName="Assign - The payment was identified" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_17">
-                <Assign.To>
-                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                </Assign.To>
-                <Assign.Value>
-                  <InArgument x:TypeArguments="x:String">The payment was identified</InArgument>
-                </Assign.Value>
-              </Assign>
+              <ui:LogMessage DisplayName="Log Message - Payment record found" sap:VirtualizedContainerService.HintSize="510,141" sap2010:WorkflowViewState.IdRef="LogMessage_15" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[String.Format(&quot;Payment record for Assessment ID: {0} found.&quot;, in_firstRecord.AssessmentID)]" />
+              <If Condition="[DtBankTransactions.Select(&#xA;&#x9;String.Format(&quot;[Debit] LIKE '{0}'&quot;,filteredAssessments(0)(&quot;AssessedAmount&quot;).ToString().Replace(&quot;$&quot;,&quot;&quot;))&#xA;&#x9;).Length &gt; 0]" DisplayName="If Assessed Amount Match" sap:VirtualizedContainerService.HintSize="510,1344" sap2010:WorkflowViewState.IdRef="If_13">
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                    <x:Boolean x:Key="IsPinned">False</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+                <If.Then>
+                  <Sequence sap:VirtualizedContainerService.HintSize="476,872" sap2010:WorkflowViewState.IdRef="Sequence_53">
+                    <Sequence.Variables>
+                      <Variable x:TypeArguments="x:String" Name="SuccessMsg" />
+                    </Sequence.Variables>
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="434,141" sap2010:WorkflowViewState.IdRef="LogMessage_16" Level="[UiPath.Core.Activities.LogLevel.Info]" Message="[&quot;Amount match. Update payment record to status Paid.&quot;]" />
+                    <Assign sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_22">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Object">[filteredAssessments(0)("AmountDue")]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Object">["0"]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <Assign sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_23">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Object">[filteredAssessments(0)("PaymentDate")]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Object" xml:space="preserve">[DtBankTransactions.Select(
+	String.Format("[Debit] LIKE '{0}'",filteredAssessments(0)("AssessedAmount").ToString().Replace("$",""))
+	)(0)("TransactionDate")]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ui:WriteRange StartingCell="{x:Null}" AddHeaders="True" DataTable="[in_DtAssessments]" DisplayName="Write Range Workbook" sap:VirtualizedContainerService.HintSize="434,116" sap2010:WorkflowViewState.IdRef="WriteRange_1" SheetName="Assessments" WorkbookPath="MockData\Mock Data.xlsx" />
+                    <ui:ReadTextFile File="{x:Null}" Content="[SuccessMsg]" DisplayName="Read Text File" FileName="EmailTemplates\PaymentMadeSuccess.txt" sap:VirtualizedContainerService.HintSize="434,80" sap2010:WorkflowViewState.IdRef="ReadTextFile_1" />
+                    <Assign sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_25">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[out_emailBody]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[SuccessMsg.Replace("&lt;corresID&gt;", in_firstRecord.AssessmentID.ToString()).Replace("&lt;paymntAmt&gt;", in_firstRecord.AssessedAmount.ToString()).Replace("&lt;paymntDate&gt;", DateTime.Parse(filteredAssessments(0)("PaymentDate").ToString()).ToString("dd-MMM-yyyy"))]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </Sequence>
+                </If.Then>
+                <If.Else>
+                  <Sequence sap:VirtualizedContainerService.HintSize="476,290" sap2010:WorkflowViewState.IdRef="Sequence_54">
+                    <Sequence.Variables>
+                      <Variable x:TypeArguments="x:String" Name="FailureMsg" />
+                    </Sequence.Variables>
+                    <sap:WorkflowViewStateService.ViewState>
+                      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                      </scg:Dictionary>
+                    </sap:WorkflowViewStateService.ViewState>
+                    <ui:ReadTextFile File="{x:Null}" Content="[FailureMsg]" DisplayName="Read Text File" FileName="EmailTemplates\PaymentMadeFail.txt" sap:VirtualizedContainerService.HintSize="434,80" sap2010:WorkflowViewState.IdRef="ReadTextFile_2" />
+                    <Assign sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_27">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:String">[out_emailBody]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:String">[FailureMsg.Replace("&lt;corresID&gt;", in_firstRecord.AssessmentID.ToString()).Replace("&lt;paymntAmt&gt;", in_firstRecord.AssessedAmount.ToString())]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </Sequence>
+                </If.Else>
+              </If>
             </Sequence>
           </If.Then>
           <If.Else>
-            <Sequence sap:VirtualizedContainerService.HintSize="476,171" sap2010:WorkflowViewState.IdRef="Sequence_52">
+            <Sequence sap:VirtualizedContainerService.HintSize="300,80" sap2010:WorkflowViewState.IdRef="Sequence_52">
               <sap:WorkflowViewStateService.ViewState>
                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
                   <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                 </scg:Dictionary>
               </sap:WorkflowViewStateService.ViewState>
-              <Assign DisplayName="Assign - The payment was not identified" sap:VirtualizedContainerService.HintSize="434,83" sap2010:WorkflowViewState.IdRef="Assign_18">
-                <Assign.To>
-                  <OutArgument x:TypeArguments="x:String">[out_comparisonOutputMsg]</OutArgument>
-                </Assign.To>
-                <Assign.Value>
-                  <InArgument x:TypeArguments="x:String">["The payment was not identified"]</InArgument>
-                </Assign.Value>
-              </Assign>
             </Sequence>
           </If.Else>
         </If>
       </Sequence>
-      <x:Null x:Key="Tax Exemption" />
+      <Sequence x:Key="TaxExemption" sap:VirtualizedContainerService.HintSize="450,191" sap2010:WorkflowViewState.IdRef="Sequence_59">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+        <ui:ReadTextFile File="{x:Null}" Content="[out_emailBody]" DisplayName="Read Text File" FileName="EmailTemplates\TaxExemptionSuccess.txt" sap:VirtualizedContainerService.HintSize="388,80" sap2010:WorkflowViewState.IdRef="ReadTextFile_3" />
+      </Sequence>
     </Switch>
   </Sequence>
 </Activity>

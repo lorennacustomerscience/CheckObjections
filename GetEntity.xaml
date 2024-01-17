@@ -6,7 +6,7 @@
   <VisualBasic.Settings>
     <x:Null />
   </VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>440,496</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1156,827</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>GetEntity_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -102,7 +102,7 @@
       <AssemblyReference>System.Collections</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="GetEntity" sap:VirtualizedContainerService.HintSize="450,431" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="GetEntity" sap:VirtualizedContainerService.HintSize="496,373" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="scg:IList(u:MARS)" Name="recordsList" />
     </Sequence.Variables>
@@ -111,7 +111,7 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <uda:QueryEntityRecords x:TypeArguments="u:MARS" TotalRecords="{x:Null}" ContinueOnError="False" DisplayName="Query Entity Records" EntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" ExpansionDepth="2" sap:VirtualizedContainerService.HintSize="388,140" sap2010:WorkflowViewState.IdRef="QueryEntityRecords`1_1" OutputRecords="[recordsList]" QueriedEntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" Skip="0" SortAscending="True" SortByField="Id" TimeoutInMs="30000" Top="100">
+    <uda:QueryEntityRecords x:TypeArguments="u:MARS" TotalRecords="{x:Null}" ContinueOnError="False" DisplayName="Query Entity Records" EntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" ExpansionDepth="2" sap:VirtualizedContainerService.HintSize="434,140" sap2010:WorkflowViewState.IdRef="QueryEntityRecords`1_1" OutputRecords="[recordsList]" QueriedEntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" Skip="0" SortAscending="True" SortByField="Id" TimeoutInMs="30000" Top="100">
       <uda:QueryEntityRecords.FilterArguments>
         <uda:FilterArgument FilterActivityType="{x:Null}">
           <uda:FilterArgument.Filter>
@@ -134,6 +134,13 @@
         </scg:List>
       </uda:QueryEntityRecords.FilterValues>
     </uda:QueryEntityRecords>
-    <uda:GetEntityRecordById x:TypeArguments="u:MARS" ContinueOnError="False" DisplayName="Get Entity Record By Id" EntityId="3215de7b-fcb3-ee11-8925-6045bd3f9728" ExpansionDepth="2" sap:VirtualizedContainerService.HintSize="388,140" sap2010:WorkflowViewState.IdRef="GetEntityRecordById`1_1" OutputEntity="[out_firstRecord]" RecordId="[recordsList.First().id]" TimeoutInMs="30000" />
+    <Assign DisplayName="Output the first matching record" sap:VirtualizedContainerService.HintSize="434,82" sap2010:WorkflowViewState.IdRef="Assign_1">
+      <Assign.To>
+        <OutArgument x:TypeArguments="u:MARS">[out_firstRecord]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="u:MARS">[recordsList.First()]</InArgument>
+      </Assign.Value>
+    </Assign>
   </Sequence>
 </Activity>

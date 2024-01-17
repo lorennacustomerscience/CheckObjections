@@ -1,0 +1,36 @@
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+        }
+    </style>
+<div class="email-container">
+    <p>Hello <customerName>,</p><br>
+    <p>Thank you for bringing this to our attention. We have verified the information you provided:</p><br>
+
+    <ul>
+        <li>Correspondence ID: <corresID></li>
+        <li>Payment Amount: <paymntAmt></li>
+        <li>Payment Date: <paymntDate></li>
+    </ul><br>
+
+    <p>Upon investigation, we have updated our records to reflect the payment you made on the specified date. We apologize for any confusion caused by the multiple notices, and we appreciate your understanding.</p><br>
+
+    <p>Please disregard the notice you received, as it has been updated in our system. If you have any further questions or concerns, feel free to reach out to us.</p><br>
+
+    <p>Thank you for your cooperation.</p><br>
+        <div class="response">
+    <p>Best regards,</p>
+    <p>Objections Support Officer,</p>
+    <p>Revenue NSW.</p><br>
+        </div>
+    </div>
